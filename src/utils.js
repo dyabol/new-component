@@ -58,3 +58,6 @@ module.exports.readFilePromiseRelative = (fileLocation) =>
 module.exports.sample = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
+
+module.exports.pascalToKebabCase = (string) =>
+  string.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();

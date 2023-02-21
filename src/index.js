@@ -18,7 +18,8 @@ const {
   mkDirPromise,
   readFilePromiseRelative,
   writeFilePromise,
-} = require('./utils');
+  pascalToKebabCase,
+} = require("./utils");
 
 // Load our package.json, so that we can pass the version onto `commander`.
 const { version } = require('../package.json');
@@ -61,6 +62,9 @@ const templatePath = `./templates/${options.lang}.js`;
 const componentDir = `${options.dir}/${componentName}`;
 const filePath = `${componentDir}/${componentName}.${fileExtension}`;
 const indexPath = `${componentDir}/index.${indexExtension}`;
+const stylePath = `${componentDir}/${componentName}.scss`;
+const testPath = `${componentDir}/${componentName}.test.${fileExtension}`;
+const storybookPath = `${componentDir}/${componentName}.stories.tsx`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
 const indexTemplate = prettify(`\
@@ -69,6 +73,40 @@ import ${componentName} from './${componentName}';
 export * from './${componentName}';
 export default ${componentName};
 `);
+
+const className = `w-${pascalToKebabCase(componentName)}`;
+
+const styleTemplate = `\
+\.${className} {
+
+}
+`;
+
+const testTemplate = `\
+import { render } from '@testing-library/react';
+import ${componentName} from "./${componentName}";
+
+describe('${componentName}', () => {
+    it('render', () => {
+        const { container } = render(<${componentName} />);
+        expect(container).toBeInTheDocument();
+    })
+});
+`;
+
+const storybookTemplate = `\
+import { Meta, Story } from '@storybook/react';
+import ${componentName}, { ${componentName}Props } from './${componentName}';
+
+export default {
+    title: 'Components/${componentName}',
+    component: ${componentName}
+} as Meta;
+
+export const Basic: Story<${componentName}Props> = (props) => <${componentName} {...props} />;
+
+Basic.args = {};
+`;
 
 logIntro({
   name: componentName,
@@ -101,19 +139,21 @@ if (fs.existsSync(fullPathToComponentDir)) {
 mkDirPromise(componentDir)
   .then(() => readFilePromiseRelative(templatePath))
   .then((template) => {
-    logItemCompletion('Directory created.');
+    logItemCompletion("Directory created.");
     return template;
   })
   .then((template) =>
     // Replace our placeholders with real data (so far, just the component name)
-    template.replace(/COMPONENT_NAME/g, componentName)
+    template
+      .replace(/COMPONENT_NAME/g, componentName)
+      .replace(/COMPONENT_CLASSNAME/g, className)
   )
   .then((template) =>
     // Format it using prettier, to ensure style consistency, and write to file.
     writeFilePromise(filePath, prettify(template))
   )
   .then((template) => {
-    logItemCompletion('Component built and saved to disk.');
+    logItemCompletion("Component built and saved to disk.");
     return template;
   })
   .then((template) =>
@@ -121,7 +161,22 @@ mkDirPromise(componentDir)
     writeFilePromise(indexPath, prettify(indexTemplate))
   )
   .then((template) => {
-    logItemCompletion('Index file built and saved to disk.');
+    logItemCompletion("Index file built and saved to disk.");
+    return template;
+  })
+  .then((template) => writeFilePromise(stylePath, styleTemplate))
+  .then((template) => {
+    logItemCompletion("Style file built and saved to disk.");
+    return template;
+  })
+  .then((template) => writeFilePromise(testPath, testTemplate))
+  .then((template) => {
+    logItemCompletion("Test file built and saved to disk.");
+    return template;
+  })
+  .then((template) => writeFilePromise(storybookPath, storybookTemplate))
+  .then((template) => {
+    logItemCompletion("Test file built and saved to disk.");
     return template;
   })
   .then((template) => {
