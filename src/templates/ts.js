@@ -1,7 +1,8 @@
-type Props = {};
+type Props = React.PropsWithChildren<{}>;
 
 const COMPONENT_NAME = (props: Props): JSX.Element => {
-  return <div></div>;
-}
+    console.log('TODO', 'COMPONENT_NAME', props);
+    return <div />;
+};
 
 export default COMPONENT_NAME;
