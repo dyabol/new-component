@@ -1,6 +1,6 @@
-import * as React from 'react';
+type Props = {};
 
-function COMPONENT_NAME() {
+const COMPONENT_NAME = (props: Props): JSX.Element => {
   return <div></div>;
 }
 
