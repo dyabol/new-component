@@ -176,7 +176,7 @@ mkDirPromise(componentDir)
   })
   .then((template) => writeFilePromise(storybookPath, storybookTemplate))
   .then((template) => {
-    logItemCompletion("Test file built and saved to disk.");
+    logItemCompletion("Stories file built and saved to disk.");
     return template;
   })
   .then((template) => {
