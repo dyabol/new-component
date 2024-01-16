@@ -23,12 +23,11 @@
   ],
   "author": "Joshua Comeau",
   "license": "MIT",
-  "bin": {
-    "new-component": "./src/index.js"
-  },
+  "bin": "./src/index.js",
   "dependencies": {
     "chalk": "4",
     "commander": "10",
     "prettier": "2.8.4"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
