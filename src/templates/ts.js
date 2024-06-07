@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import styles from "./COMPONENT_NAME.scss";
+import styles from "./COMPONENT_NAME.module.scss";
 
 export type COMPONENT_NAMEProps = React.PropsWithChildren<{}>;
 
