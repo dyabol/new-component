@@ -62,7 +62,7 @@ const templatePath = `./templates/${options.lang}.js`;
 const componentDir = `${options.dir}/${componentName}`;
 const filePath = `${componentDir}/${componentName}.${fileExtension}`;
 const indexPath = `${componentDir}/index.${indexExtension}`;
-const stylePath = `${componentDir}/${componentName}.scss`;
+const stylePath = `${componentDir}/${componentName}.module.scss`;
 const testPath = `${componentDir}/${componentName}.test.${fileExtension}`;
 const storybookPath = `${componentDir}/${componentName}.stories.tsx`;
 
@@ -74,7 +74,7 @@ export * from './${componentName}';
 export default ${componentName};
 `);
 
-const className = `w-${pascalToKebabCase(componentName)}`;
+const className = componentName.charAt(0).toLowerCase() + componentName.slice(1);
 
 const styleTemplate = `\
 \.${className} {
@@ -95,7 +95,7 @@ describe('${componentName}', () => {
 `;
 
 const storybookTemplate = `\
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import ${componentName}, { ${componentName}Props } from './${componentName}';
 
 export default {
@@ -103,7 +103,7 @@ export default {
     component: ${componentName}
 } as Meta;
 
-export const Basic: Story<${componentName}Props> = (props) => <${componentName} {...props} />;
+export const Basic: StoryFn<${componentName}Props> = (props) => <${componentName} {...props} />;
 
 Basic.args = {};
 `;
